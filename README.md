@@ -1,70 +1,121 @@
-# Getting Started with Create React App
+# Crickdle
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Crickdle is a Wordle-inspired cricket player guessing game built with React. Identify the mystery player in up to six guesses using clues for their age, country, role, batting style, bowling style, and IPL team.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- Six guesses per game
+- Player-name autocomplete search
+- Instant clue feedback for every player attribute
+- Exact, close, and incorrect clue states
+- Age hints showing whether a guess is higher or lower than the answer
+- Answer reveal and one-click new game flow
+- Responsive layout styled with Tailwind CSS
 
-### `npm start`
+## How to play
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+1. Start typing a cricket player's name in the search field.
+2. Select a player from the suggestions or enter the full name.
+3. Press **Guess** or hit **Enter**.
+4. Use the colored cells to narrow down the answer:
+   - **Green**: the value is correct.
+   - **Amber**: the value is close. For age, the arrows indicate whether the answer is higher or lower; batting and bowling styles are compared by their primary style.
+   - **Gray**: the value does not match.
+5. Solve the puzzle within six guesses, then start a new game when the answer is revealed.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Tech stack
 
-### `npm test`
+- React 19
+- Create React App / `react-scripts`
+- Axios for API requests
+- Tailwind CSS with PostCSS
+- Testing Library and Jest
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Getting started
 
-### `npm run build`
+### Prerequisites
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Node.js and npm
+- A running Crickdle API that provides the player endpoints described below
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Installation
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+npm install
+```
 
-### `npm run eject`
+Create a `.env` file in the project root and set the API base URL:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```env
+REACT_APP_API_URL=http://localhost:8000
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Then start the development server:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```bash
+npm start
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## Learn More
+## API requirements
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+The frontend reads the API base URL from `REACT_APP_API_URL` and calls:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+| Method | Endpoint | Purpose |
+| --- | --- | --- |
+| `GET` | `/api/v1/players/random` | Returns the mystery player |
+| `GET` | `/api/v1/players` | Returns the searchable player list |
 
-### Code Splitting
+Both endpoints are expected to return a response shaped like:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+```json
+{
+  "data": {}
+}
+```
 
-### Analyzing the Bundle Size
+Each player should include these fields:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+```text
+id, name, age, country, role, batting_style, bowling_style, ipl_team
+```
 
-### Making a Progressive Web App
+`ipl_team` may be empty when a player has not represented an IPL team.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Available scripts
 
-### Advanced Configuration
+| Command | Description |
+| --- | --- |
+| `npm start` | Starts the development server. |
+| `npm test` | Runs the test suite in watch mode. |
+| `npm run build` | Creates an optimized production build in `build/`. |
+| `npm run eject` | Ejects from Create React App. This is irreversible. |
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## Project structure
 
-### Deployment
+```text
+src/
+├── components/
+│   ├── Game.jsx          # Game state and gameplay flow
+│   ├── GuessGrid.jsx     # Six-row clue grid
+│   ├── GuessRow.jsx      # Per-field guess evaluation
+│   └── SearchInput.jsx   # Player search and autocomplete
+├── services/
+│   └── api.js            # Backend API client
+├── App.js                # Application entry component
+├── App.css               # App-level styles
+└── index.css             # Tailwind and game styles
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## Building for production
 
-### `npm run build` fails to minify
+```bash
+npm run build
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Deploy the generated `build/` directory to a static hosting provider. Make sure `REACT_APP_API_URL` is configured at build time so the deployed frontend can reach the player API.
+
+## License
+
+No license has been specified yet.
